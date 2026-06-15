@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streamplan – Jokerella92</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0e0b14;
+    color: #e8e0f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 12px;
+    min-width: 200px;
+  }
+
+  .panel-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #c084fc;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+
+  .panel-week {
+    font-size: 11px;
+    color: #7c6b99;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #2a1f3d;
+    margin-bottom: 12px;
+  }
+
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid #1a1226;
+  }
+
+  .day-row:last-of-type { border-bottom: none; }
+
+  .day-icon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .day-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7c6b99;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: 72px;
+    flex-shrink: 0;
+  }
+
+  .day-content { color: #e8e0f0; flex: 1; }
+
+  .day-content.off {
+    color: #4a3d5c;
+    text-decoration: line-through;
+    font-style: italic;
+  }
+
+  .tag-spontan {
+    display: inline-block;
+    background: #1e1530;
+    color: #a855f7;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid #3d2a5c;
+  }
+
+  .footer {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #4a3d5c;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .error {
+    color: #7c6b99;
+    text-align: center;
+    font-size: 11px;
+    padding: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel-title">Streamplan</div>
+<div class="panel-week" id="woche">lädt...</div>
+<hr class="divider">
+<div id="tage"></div>
+<div class="footer">★ streams finden abends statt ★</div>
+
+<script>
+  // ⚠️ DIESE ZEILE ANPASSEN: deinen GitHub-Username eintragen
+  const GITHUB_USER = 'DEIN-USERNAME';
+  const GITHUB_REPO = 'streamplan';
+
+  const url = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/plan.json?t=${Date.now()}`;
+
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error();
+      return r.json();
+    })
+    .then(data => {
+      document.getElementById('woche').textContent = data.woche;
+
+      const container = document.getElementById('tage');
+      data.tage.forEach(t => {
+        const isSpontan = t.inhalt.toLowerCase() === 'spontan';
+        const inhalt = isSpontan
+          ? `<span class="tag-spontan">spontan</span>`
+          : t.inhalt;
+
+        container.innerHTML += `
+          <div class="day-row">
+            <div class="day-icon">${t.icon}</div>
+            <div class="day-name">${t.tag}</div>
+            <div class="day-content${t.off ? ' off' : ''}">${inhalt}</div>
+          </div>`;
+      });
+    })
+    .catch(() => {
+      document.getElementById('woche').textContent = '';
+      document.getElementById('tage').innerHTML =
+        '<div class="error">plan konnte nicht geladen werden</div>';
+    });
+</script>
+
+</body>
+</html>
