@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streamplan Editor – Jokerella92</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0e0b14;
+    color: #e8e0f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #c084fc;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 11px;
+    color: #7c6b99;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: #1a1226;
+    border: 1px solid #2a1f3d;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7c6b99;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: #7c6b99;
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+
+  label:first-of-type { margin-top: 0; }
+
+  input[type="text"], input[type="password"], input[type="date"] {
+    width: 100%;
+    background: #0e0b14;
+    border: 1px solid #2a1f3d;
+    border-radius: 6px;
+    color: #e8e0f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  input:focus { outline: none; border-color: #c084fc; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 36px 100px 1fr 36px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a1f3d;
+  }
+
+  .day-row:last-of-type { border-bottom: none; }
+
+  .day-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7c6b99;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .icon-input {
+    width: 100%;
+    background: #0e0b14;
+    border: 1px solid #2a1f3d;
+    border-radius: 6px;
+    color: #e8e0f0;
+    font-size: 16px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  .off-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #2a1f3d;
+    background: transparent;
+    color: #7c6b99;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .off-btn.active {
+    background: #3d1f1f;
+    border-color: #7c2020;
+    color: #e24b4a;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn:hover { opacity: 0.85; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-save {
+    background: #7c3aed;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #2a1f3d;
+    color: #7c6b99;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0;
+    padding: 8px;
+    margin-top: 8px;
+  }
+
+  .status {
+    text-align: center;
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .status.success { background: #0f2a1a; color: #4ade80; display: block; }
+  .status.error   { background: #2a0f0f; color: #f87171; display: block; }
+  .status.loading { background: #1a1226; color: #c084fc; display: block; }
+
+  .token-hint {
+    font-size: 11px;
+    color: #4a3d5c;
+    margin-top: 6px;
+  }
+
+  #token-section { margin-bottom: 16px; }
+  #token-logged-in { display: none; }
+
+  .token-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f2a1a;
+    border: 1px solid #1a4a2a;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #4ade80;
+  }
+
+  .token-badge button {
+    background: none;
+    border: none;
+    color: #7c6b99;
+    font-size: 11px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<h1>Streamplan</h1>
+<div class="subtitle">Jokerella92 – Editor</div>
+
+<!-- Token -->
+<div class="card" id="token-section">
+  <div class="card-title">GitHub Token</div>
+  <label>Personal Access Token</label>
+  <input type="password" id="token-input" placeholder="github_pat_..." />
+  <p class="token-hint">Wird nur in deinem Browser gespeichert, nie übertragen.</p>
+  <button class="btn btn-secondary" onclick="saveToken()" style="margin-top:12px;">Token speichern</button>
+</div>
+
+<div id="token-logged-in">
+  <div class="token-badge">
+    <span>✓ Token gespeichert</span>
+    <button onclick="clearToken()">entfernen</button>
+  </div>
+</div>
+
+<!-- Woche -->
+<div class="card">
+  <div class="card-title">Zeitraum</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div>
+      <label>Von</label>
+      <input type="date" id="date-from" />
+    </div>
+    <div>
+      <label>Bis</label>
+      <input type="date" id="date-to" />
+    </div>
+  </div>
+</div>
+
+<!-- Tage -->
+<div class="card">
+  <div class="card-title">Tage</div>
+  <div id="day-list"></div>
+</div>
+
+<!-- Speichern -->
+<button class="btn btn-save" onclick="savePlan()">💾 Auf GitHub speichern</button>
+<div class="status" id="status"></div>
+
+<script>
+const GITHUB_USER = 'jeremygubler';
+const GITHUB_REPO = 'streamplan';
+const FILE_PATH   = 'plan.json';
+
+const DAYS = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+const DEFAULT_ICONS = ['❌','🟣','❌','📖','🎮','🎮','🎮'];
+const DEFAULT_INHALTE = ['Kein Stream','Dark Hours','Kein Stream','Life is Strange','R.E.P.O.','Spontan','Spontan'];
+const DEFAULT_OFF = [true, false, true, false, false, false, false];
+
+function getToken() { return localStorage.getItem('sp_gh_token') || ''; }
+
+function saveToken() {
+  const t = document.getElementById('token-input').value.trim();
+  if (!t) return;
+  localStorage.setItem('sp_gh_token', t);
+  document.getElementById('token-input').value = '';
+  renderTokenState();
+}
+
+function clearToken() {
+  localStorage.removeItem('sp_gh_token');
+  renderTokenState();
+}
+
+function renderTokenState() {
+  const has = !!getToken();
+  document.getElementById('token-section').style.display = has ? 'none' : 'block';
+  document.getElementById('token-logged-in').style.display = has ? 'block' : 'none';
+}
+
+function getMonday() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() + diff);
+  return mon;
+}
+
+function fmt(d) { return d.toISOString().split('T')[0]; }
+
+function fmtDisplay(d) {
+  return d.toLocaleDateString('de-CH', { day: 'numeric', month: 'numeric' });
+}
+
+function renderDays() {
+  const list = document.getElementById('day-list');
+  list.innerHTML = '';
+  DAYS.forEach((day, i) => {
+    const row = document.createElement('div');
+    row.className = 'day-row';
+    row.innerHTML = `
+      <input class="icon-input" id="icon-${i}" value="${DEFAULT_ICONS[i]}" maxlength="2" />
+      <div class="day-label">${day}</div>
+      <input type="text" id="inhalt-${i}" value="${DEFAULT_INHALTE[i]}" placeholder="Spiel oder Inhalt..." />
+      <button class="off-btn${DEFAULT_OFF[i] ? ' active' : ''}" id="off-${i}" onclick="toggleOff(${i})" title="Kein Stream">✕</button>
+    `;
+    list.appendChild(row);
+    if (DEFAULT_OFF[i]) document.getElementById(`inhalt-${i}`).style.opacity = '0.4';
+  });
+}
+
+function toggleOff(i) {
+  const btn = document.getElementById(`off-${i}`);
+  const inp = document.getElementById(`inhalt-${i}`);
+  const isOff = btn.classList.toggle('active');
+  inp.style.opacity = isOff ? '0.4' : '1';
+}
+
+function buildJson() {
+  const from = new Date(document.getElementById('date-from').value + 'T00:00:00');
+  const to   = new Date(document.getElementById('date-to').value + 'T00:00:00');
+  const woche = `${fmtDisplay(from)} – ${fmtDisplay(to)}.${to.getFullYear()}`;
+
+  const tage = DAYS.map((tag, i) => ({
+    tag,
+    icon:   document.getElementById(`icon-${i}`).value,
+    inhalt: document.getElementById(`inhalt-${i}`).value,
+    off:    document.getElementById(`off-${i}`).classList.contains('active')
+  }));
+
+  return JSON.stringify({ woche, tage }, null, 2);
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = `status ${type}`;
+}
+
+async function savePlan() {
+  const token = getToken();
+  if (!token) { setStatus('Bitte zuerst den GitHub Token eingeben.', 'error'); return; }
+
+  setStatus('Wird gespeichert...', 'loading');
+
+  try {
+    const apiBase = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
+    const headers = {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    // aktuellen SHA holen (nötig für Update)
+    let sha = null;
+    const existing = await fetch(apiBase, { headers });
+    if (existing.ok) {
+      const data = await existing.json();
+      sha = data.sha;
+    }
+
+    const content = btoa(unescape(encodeURIComponent(buildJson())));
+    const body = { message: 'Streamplan aktualisiert', content };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(apiBase, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body)
+    });
+
+    if (res.ok) {
+      setStatus('✓ Streamplan gespeichert! Panel aktualisiert sich in wenigen Sekunden.', 'success');
+    } else {
+      const err = await res.json();
+      setStatus(`Fehler: ${err.message}`, 'error');
+    }
+  } catch(e) {
+    setStatus('Verbindungsfehler – bitte nochmal versuchen.', 'error');
+  }
+}
+
+// Init
+renderTokenState();
+renderDays();
+
+const mon = getMonday();
+const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+document.getElementById('date-from').value = fmt(mon);
+document.getElementById('date-to').value   = fmt(sun);
+</script>
+
+</body>
+</html>
