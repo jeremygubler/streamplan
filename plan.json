@@ -1,12 +1,47 @@
 {
-  "woche": "15.6. – 21.6.2026",
+  "woche": "15.6. – 21.6..2026",
   "tage": [
-    { "tag": "Montag",     "icon": "❌", "inhalt": "Kein Stream", "off": true  },
-    { "tag": "Dienstag",   "icon": "🟣", "inhalt": "Dark Hours",  "off": false },
-    { "tag": "Mittwoch",   "icon": "❌", "inhalt": "Kein Stream", "off": true  },
-    { "tag": "Donnerstag", "icon": "📖", "inhalt": "Life is Strange", "off": false },
-    { "tag": "Freitag",    "icon": "🎮", "inhalt": "R.E.P.O.",    "off": false },
-    { "tag": "Samstag",    "icon": "🎮", "inhalt": "Spontan",     "off": false },
-    { "tag": "Sonntag",    "icon": "🎮", "inhalt": "Spontan",     "off": false }
+    {
+      "tag": "Montag",
+      "icon": "❌",
+      "inhalt": "Kein Stream",
+      "off": true
+    },
+    {
+      "tag": "Dienstag",
+      "icon": "🟣",
+      "inhalt": "Dark Hours",
+      "off": false
+    },
+    {
+      "tag": "Mittwoch",
+      "icon": "❌",
+      "inhalt": "Kein Stream",
+      "off": true
+    },
+    {
+      "tag": "Donnerstag",
+      "icon": "📖",
+      "inhalt": "Life is Strange",
+      "off": false
+    },
+    {
+      "tag": "Freitag",
+      "icon": "🎮",
+      "inhalt": "R.E.P.O.",
+      "off": false
+    },
+    {
+      "tag": "Samstag",
+      "icon": "🎮",
+      "inhalt": "Spontan",
+      "off": false
+    },
+    {
+      "tag": "Sonntag",
+      "icon": "🎮",
+      "inhalt": "Spontan",
+      "off": false
+    }
   ]
 }
